@@ -115,10 +115,14 @@ void init_frame_buffer(void) {
 	srand(time(NULL));
 }
 
+/*
+ * Initializes the frame buf so that the fire can start or be "ignited" from the bottom row of the grid
+ * The initial value of the bottom row should be brightest element from the fire color array.
+ * By default, the fire color array is sorted from darkest to lightest in ascending order.
+ */
 void init_fire_effect(void) {
-	// init flame buffer
     for (int i=0; i<grid_x; i++) {
-        frame_buf[(grid_y-1) * grid_x + i] = 4;
+        frame_buf[(grid_y-1) * grid_x + i] = 10;
     }
 }
 /*
@@ -131,36 +135,48 @@ void init_fire_effect(void) {
 void set_fire_effect(void) {
 	/*
 	 * Flame gradient key
-	 * {255, 0, 0},		red
-	 * {210, 4, 0},		red orange
-	 * {161, 16, 0},	orange
-	 * {191, 32, 0},	yellow orange
-	 * {243, 60, 4},	light orange
+	 * {0, 0, 0},		black
+	 * {8, 1, 0},		faint orange
+	 * {36, 2, 0},		faint red orange
+	 * {107, 8, 0},		red orange
+	 * {92, 12, 0},		dark orange
+	 * {80, 16, 0},		orange
+	 * {64, 16, 0},		light orange
+	 * {255, 32, 0},	bright light orange
 	 *
 	 * gradient table organize in a "fire" pattern
+	 * note that my LEDs might be damaged so the color table might be off
+	 *
+	 * potential colors
+	 * {191, 32, 0},	yellow orange
 	 */
-	uint8_t fire_colors[5][3] = {
-			 {255, 0, 0},
-			 {210, 4, 0},
-			 {161, 16, 0},
-			 {191, 32, 0},
-			 {243, 60, 4}
+	uint8_t fire_colors[11][3] = {
+			 {0, 0, 0},
+			 {0, 0, 0},
+			 {0, 0, 0},
+			 {0, 0, 0},
+			 {8, 1, 0},
+			 {36, 2, 0},
+			 {107, 8, 0},
+			 {92, 12, 0},
+			 {80, 16, 0},
+			 {64, 16, 0},
+			 {255, 32, 0},
 	};
 
-	// use a 2d array to model a fire being ignited
+	/*
+	 * Use a 2D array to model a fire being ignited
+	 * This code ignites the flame from the bottom row. The bottom array needs to be initialized from init_fire_effect().
+	 * The r_val variable is needed for a fire flickering effect.
+	 * Adjust r_val_height to control the height of the fire
+	 */
+	int r_val_height = 0;
     for (int x = 0; x < grid_x; x++) {
         for (int y = 1; y < grid_y; y++) {
-            int r_val = (rand() % 4 );
-            unsigned int prev = y * grid_x + x;
-            unsigned int curr = prev - grid_x;
-//            frame_buf[curr] = frame_buf[prev];
-//            frame_buf[curr] = frame_buf[prev] - r_val;
-            if ((frame_buf[prev] - (r_val & 1)) > sizeof(fire_colors)) {
-            	frame_buf[curr] = 0;
-            }
-            else {
-            	frame_buf[curr] = frame_buf[prev] - (r_val & 1);
-            }
+        	r_val_height = (rand() % 10 );
+            int prev = y * grid_x + x;
+            int curr = prev - grid_x;
+            frame_buf[curr] = abs(frame_buf[prev] - 1 - (r_val_height & ((rand() % 4) )));
         }
     }
 

@@ -171,7 +171,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
 //		rainbow();
 		set_fire_effect();
-		delay_cycles( 100000 );
+		delay_cycles( 500000 );
   }
   /* USER CODE END 3 */
 }
