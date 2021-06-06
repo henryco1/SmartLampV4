@@ -8,19 +8,24 @@
 #ifndef INC_WS2812B_H_
 #define INC_WS2812B_H_
 
-#include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 // Array of LED colors. G/R/B/G/R/B/...
-#define NUM_LEDS  ( 50 )
+#define NUM_LEDS  ( 36 )
 #define LED_BYTES ( ( NUM_LEDS * 3 * 8 ) + 64 )
 // Max brightness (out of a possible 255)
 #define MAX_B ( 63 )
 // How quickly to increment/decrement the colors.
 #define B_INC ( 1 )
 
+#define grid_x 6
+#define grid_y 6
+
 uint8_t COLORS[ LED_BYTES ];
+unsigned int frame_buf[grid_x*grid_y];
 
 uint32_t get_rgb_color( uint8_t r, uint8_t g, uint8_t b );
 void set_color( size_t led_index, uint32_t col );
@@ -29,4 +34,6 @@ uint8_t get_led_g( size_t led_num );
 uint8_t get_led_b( size_t led_num );
 void rainbow( void );
 void reset_leds( void );
+void set_fire_effect(void);
+void init_fire_effect(void);
 #endif /* INC_WS2812B_H_ */

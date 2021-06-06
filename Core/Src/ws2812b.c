@@ -102,6 +102,7 @@ void reset_leds( void ) {
 	for ( size_t i = LED_BYTES - 64; i < LED_BYTES; ++i ) {
 		COLORS[ i ] = 0x00;
 	}
+	memset(frame_buf, 0, grid_x * grid_y * sizeof(unsigned int));
 }
 
 void set_red( void ) {
@@ -110,12 +111,24 @@ void set_red( void ) {
 	}
 }
 
+void init_frame_buffer(void) {
+	srand(time(NULL));
+}
+
+void init_fire_effect(void) {
+	// init flame buffer
+    for (int i=0; i<grid_x; i++) {
+        frame_buf[(grid_y-1) * grid_x + i] = 4;
+    }
+}
 /*
+ * Creates a fire animation using the WS2812B LEDs. This function has two major parts:
+ * 1. generating a fire model using a 2d array
+ * 2. use the fire model to generate color data for the LEDs
+ *
  * fire effect based on this gradient https://www.schemecolor.com/fire-gradient.php
  */
 void set_fire_effect(void) {
-	int grid_x = 6;
-	int grid_y = 6;
 	/*
 	 * Flame gradient key
 	 * {255, 0, 0},		red
@@ -126,43 +139,45 @@ void set_fire_effect(void) {
 	 *
 	 * gradient table organize in a "fire" pattern
 	 */
-	uint8_t fire_colors[10][3] = {
+	uint8_t fire_colors[5][3] = {
 			 {255, 0, 0},
 			 {210, 4, 0},
 			 {161, 16, 0},
 			 {191, 32, 0},
-			 {243, 60, 4},
-			 {243, 60, 4},
-			 {191, 32, 0},
-			 {161, 16, 0},
-			 {210, 4, 0},
-			 {255, 0, 0}
+			 {243, 60, 4}
 	};
 
-//	uint8_t fire_colors[10][3] = {
-//			 {128, 0, 0},
-//			 {105, 2, 0},
-//			 {80, 8, 0},
-//			 {95, 16, 0},
-//			 {122, 30, 2},
-//			 {122, 30, 2},
-//			 {95, 16, 0},
-//			 {80, 8, 0},
-//			 {105, 2, 0},
-//			 {128, 0, 0}
-//	};
+	// use a 2d array to model a fire being ignited
+    for (int x = 0; x < grid_x; x++) {
+        for (int y = 1; y < grid_y; y++) {
+            int r_val = (rand() % 4 );
+            unsigned int prev = y * grid_x + x;
+            unsigned int curr = prev - grid_x;
+//            frame_buf[curr] = frame_buf[prev];
+//            frame_buf[curr] = frame_buf[prev] - r_val;
+            if ((frame_buf[prev] - (r_val & 1)) > sizeof(fire_colors)) {
+            	frame_buf[curr] = 0;
+            }
+            else {
+            	frame_buf[curr] = frame_buf[prev] - (r_val & 1);
+            }
+        }
+    }
 
-	const uint8_t FIRE_COLOR_SIZE = 10;
-	size_t i = 0;
+    // input the 2d fire model into the LEDs
+    for (int i=0; i<NUM_LEDS; i++) {
+    	set_color(i, get_rgb_color(fire_colors[frame_buf[i]][0], fire_colors[frame_buf[i]][1], fire_colors[frame_buf[i]][2]));
+    }
+
+//	size_t i = 0;
 	// generate a pyramid shape
-	for (size_t x=0; x<grid_x-1; x++) {
-		size_t iterator = 0;
-		for (size_t y=0; y<grid_y-1, i<NUM_LEDS; y++, i++) {
-			double brightness = (double)rand() / (double)RAND_MAX;
-			iterator = (x+y) % FIRE_COLOR_SIZE;
-			set_color(i, get_rgb_color(fire_colors[iterator][0]*brightness, fire_colors[iterator][1]*brightness, fire_colors[iterator][2]*brightness));
-		}
-		delay_cycles( 500000 );
-//		delay_cycles( 100000 );
-	}
+//	for (size_t x=0; x<grid_x-1; x++) {
+//		size_t iterator = 0;
+//		for (size_t y=0; y<grid_y-1, i<NUM_LEDS; y++, i++) {
+//			double brightness = (double)rand() / (double)RAND_MAX;
+//			iterator = (x+y) % FIRE_COLOR_SIZE;
+//			set_color(i, get_rgb_color(fire_colors[iterator][0]*brightness, fire_colors[iterator][1]*brightness, fire_colors[iterator][2]*brightness));
+//		}
+//		delay_cycles( 500000 );
+//	}
 }

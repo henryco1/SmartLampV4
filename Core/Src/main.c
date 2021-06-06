@@ -159,6 +159,7 @@ int main(void)
   reset_leds();
 
   srand(time(NULL));
+  init_fire_effect();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -169,8 +170,8 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 //		rainbow();
-	  set_fire_effect();
-//		delay_cycles( 100000 );
+		set_fire_effect();
+		delay_cycles( 100000 );
   }
   /* USER CODE END 3 */
 }
