@@ -62,11 +62,7 @@ static void MX_SPI1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-// Simple imprecise delay method.
-void __attribute__( ( optimize( "O0" ) ) )
-delay_cycles( uint32_t cyc ) {
-  for ( uint32_t d_i = 0; d_i < cyc; ++d_i ) { asm( "NOP" ); }
-}
+
 /* USER CODE END 0 */
 
 /**
@@ -101,31 +97,63 @@ int main(void)
   MX_USART2_UART_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-  // Setup pin: just one for this demo, PA7 is AF#0 (SPI1 SDO / MISO).
+
+  // LED pin: the LED strip uses PA7, PA7 is AF#0 (SPI1 SDO / MISO).
   GPIOA->MODER    &= ~( 0x3 << ( 7 * 2 ) );		// clear / set to reset
   GPIOA->MODER    |=  ( 0x2 << ( 7 * 2 ) );		// set to alt func mode
-  GPIOA->AFR[ 0 ] &= ~( 0x00 << (7 * 2) );		// clear
-  GPIOA->AFR[ 0 ] |= ( 0x5 << (7 * 4) );		// set AF5 for PA7 is SPI1_MOSI (GPIO_AFRL_AFSEL5)
-  // DMA configuration (channel 1).
-  // CCR register:
-  // - Memory-to-peripheral
-  // - Circular mode enabled.
-  // - Increment memory ptr, don't increment periph ptr.
-  // - -bit data size for both source and destination.
-  // - High priority.
+  GPIOA->AFR[0] &= ~( 0x00 << (7 * 2) );		// clear
+  GPIOA->AFR[0] |= ( 0x5 << (7 * 4) );		// set AF5 for PA7 is SPI1_MOSI (GPIO_AFRL_AFSEL5)
+  /*
+   * GPIO config
+   * - set as input
+   * - enable pull up resistor
+   *
+   * Button pins
+   * - Power button uses PA0
+   * - Mode switch left uses PA1
+   * - Mode switch right uses PA2
+   */
+
+  GPIOA->MODER    &= ~( (0x3 << GPIO_PIN_0 ) | (0x3 << GPIO_PIN_1 ) | (0x3 << GPIO_PIN_2 ) );
+  GPIOA->PUPDR    &= ~( (0x0 << GPIO_PIN_0 ) | (0x0 << GPIO_PIN_1 ) | (0x0 << GPIO_PIN_2 ) );
+  GPIOA->MODER    |=  ( (0x0 << GPIO_PIN_0 ) | (0x0 << GPIO_PIN_1 ) | (0x0 << GPIO_PIN_2 ) );		// set to alt func mode
+  GPIOA->PUPDR    |=  ( (0x1 << GPIO_PIN_0 ) | (0x1 << GPIO_PIN_1 ) | (0x1 << GPIO_PIN_2 ) );		// set gpio as input
+
+//
+//  GPIOA->MODER    |=  ( 0x0 << ( 0 * 2 ) );		// set to alt func mode
+//  GPIOA->PUPDR    &= ~( 0x0 << ( 0 * 2 ) );		// clear
+//  GPIOA->PUPDR    |=  ( 0x1 << ( 0 * 2 ) );		// set gpio as input
+//  // Mode switch left uses PA1
+//  GPIOA->MODER    &= ~( 0x3 << ( 1 * 2 ) );		// clear / set to reset
+//  GPIOA->MODER    |=  ( 0x0 << ( 1 * 2 ) );		// set to alt func mode
+//  GPIOA->PUPDR    &= ~( 0x0 << ( 1 * 2 ) );		// clear
+//  GPIOA->PUPDR    |=  ( 0x1 << ( 1 * 2 ) );		// set gpio as input
+//  // Mode switch right uses PA2
+//  GPIOA->MODER    &= ~( 0x3 << ( 2 * 2 ) );		// clear / set to reset
+//  GPIOA->MODER    |=  ( 0x0 << ( 2 * 2 ) );		// set to alt func mode
+//  GPIOA->PUPDR    &= ~( 0x0 << ( 2 * 2 ) );		// clear
+//  GPIOA->PUPDR    |=  ( 0x1 << ( 2 * 2 ) );		// set gpio as input
+
+
+  /*
+   * DMA config (ch1)
+   * - Memory to peripheral
+   * - Circular mode
+   * - Increment memory ptr, don't increment peripheral ptr
+   * - Bit data size for both source and destination
+   * - High priority
+   */
   DMA1_Channel3->CCR &= ~( DMA_CCR_MEM2MEM |
 						   DMA_CCR_PL |
 						   DMA_CCR_MSIZE |
 						   DMA_CCR_PSIZE |
 						   DMA_CCR_PINC |
 						   DMA_CCR_EN );
-  DMA1_Channel3->CCR |=  ( ( 0x2 << DMA_CCR_PL_Pos ) |
+  DMA1_Channel3->CCR |=  (( 0x2 << DMA_CCR_PL_Pos ) |
 						   DMA_CCR_MINC |
 						   DMA_CCR_CIRC |
 						   DMA_CCR_DIR );
-  // Route DMA channel 0 to SPI1 transmit.
-//  DMAMUX1_Channel1->CCR &= ~( DMAMUX_CxCR_DMAREQ_ID );
-//  DMAMUX1_Channel1->CCR |=  ( 17 << DMAMUX_CxCR_DMAREQ_ID );
+
   // Set DMA source and destination addresses.
   // Source: Address of the framebuffer.
   DMA1_Channel3->CMAR  = ( uint32_t )&COLORS;
@@ -169,9 +197,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-//		rainbow();
 		set_fire_effect();
-		delay_cycles( 500000 );
   }
   /* USER CODE END 3 */
 }

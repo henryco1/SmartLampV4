@@ -6,12 +6,12 @@
  */
 #include "ws2812b.h"
 
-//void __attribute__( ( optimize( "O0" ) ) )
-//delay_cycles( uint32_t cyc ) {
-//  for ( uint32_t d_i = 0; d_i < cyc; ++d_i ) { asm( "NOP" ); }
-//}
+void __attribute__( ( optimize( "O0" ) ) )
+delay_cycles( uint32_t cyc ) {
+  for ( uint32_t d_i = 0; d_i < cyc; ++d_i ) { asm( "NOP" ); }
+}
 
-const uint8_t gamma[] = {
+const uint8_t gamma_table[] = {
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
     0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  1,
     1,  1,  1,  1,  1,  1,  1,  1,  1,  2,  2,  2,  2,  2,  2,  2,
@@ -154,33 +154,18 @@ void set_fire_effect(void) {
 	/*
 	 * Flame gradient key
 	 * {0, 0, 0},		black
-	 * {16, 1, 0},		faint orange
-	 * {66, 2, 0},		faint red orange
-	 * {107, 8, 0},		red orange
-	 * {192, 10, 0},	dark orange
-	 * {180, 12, 0},	orange
-	 * {116, 12, 0},	light orange
-	 * {255, 32, 0},	bright light orange
+	 * {255,102,0}		dark orange
+	 * {255,148,46}		orange
+	 *
+	 * all non black colors in the table are between dark orange and
+	 * orange
 	 *
 	 * gradient table organize in a "fire" pattern
 	 * note that my LEDs might be damaged so the color table might be off
 	 *
-	 * potential colors
-	 * {191, 32, 0},	yellow orange
+	 * https://meyerweb.com/eric/tools/color-blend/#FFCC66:FF6600:10:rgbd
 	 */
 	uint8_t fire_colors[14][3] = {
-//		 {0, 0, 0},
-//		 {0, 0, 0},
-//		 {0, 0, 0},
-//		 {16, 1, 0},
-//		 {66, 2, 0},
-//		 {107, 8, 0},
-//		 {192, 10, 0},
-//		 {180, 12, 0},
-//		 {116, 12, 0},
-//		 {116, 12, 0},
-//		 {255, 32, 0},
-
 			 {0, 0, 0},
 			 {0, 0, 0},
 			 {0, 0, 0},
@@ -195,18 +180,6 @@ void set_fire_effect(void) {
 			 {255,121,19},
 			 {255,111,9},
 			 {255,102,0},
-
-//			 {0, 0, 0},
-//			 {0, 0, 0},
-//			 {0, 0, 0},
-//			 {255,102,0},
-//			 {255,111,9},
-//			 {255,121,19},
-//			 {255,130,28},
-//			 {255,139,37},
-//			 {255,148,46},
-//			 {255,158,56},
-//			 {255,167,65},
 	};
 
 	// bi colors
@@ -269,7 +242,7 @@ void set_fire_effect(void) {
 	 * Adjust r_val_height to control the height of the embers in the fire. Lower this value to decrease the height
 	 */
 	int r_val_spread = 0;
-	int r_val_spread_factor = 3; // 3
+	int r_val_spread_factor = 4; // 3
 	int r_val_height = 3; // 3
     for (int x = 0; x < grid_x; x++) {
         for (int y = 1; y < grid_y; y++) {
@@ -282,18 +255,7 @@ void set_fire_effect(void) {
 
     // input the 2d fire model into the LEDs
     for (int i=0; i<NUM_LEDS; i++) {
-    	set_color(i, get_rgb_color(gamma[fire_colors[frame_buf[i]][0]], gamma[fire_colors[frame_buf[i]][1]], gamma[fire_colors[frame_buf[i]][2]]));
+    	set_color(i, get_rgb_color(gamma_table[fire_colors[frame_buf[i]][0]], gamma_table[fire_colors[frame_buf[i]][1]], gamma_table[fire_colors[frame_buf[i]][2]]));
     }
-
-//	size_t i = 0;
-	// generate a pyramid shape
-//	for (size_t x=0; x<grid_x-1; x++) {
-//		size_t iterator = 0;
-//		for (size_t y=0; y<grid_y-1, i<NUM_LEDS; y++, i++) {
-//			double brightness = (double)rand() / (double)RAND_MAX;
-//			iterator = (x+y) % FIRE_COLOR_SIZE;
-//			set_color(i, get_rgb_color(fire_colors[iterator][0]*brightness, fire_colors[iterator][1]*brightness, fire_colors[iterator][2]*brightness));
-//		}
-//		delay_cycles( 500000 );
-//	}
+	delay_cycles( 500000 );
 }
