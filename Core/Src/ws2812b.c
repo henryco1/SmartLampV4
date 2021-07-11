@@ -11,6 +11,24 @@
 //  for ( uint32_t d_i = 0; d_i < cyc; ++d_i ) { asm( "NOP" ); }
 //}
 
+const uint8_t gamma[] = {
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  1,
+    1,  1,  1,  1,  1,  1,  1,  1,  1,  2,  2,  2,  2,  2,  2,  2,
+    2,  3,  3,  3,  3,  3,  3,  3,  4,  4,  4,  4,  4,  5,  5,  5,
+    5,  6,  6,  6,  6,  7,  7,  7,  7,  8,  8,  8,  9,  9,  9, 10,
+   10, 10, 11, 11, 11, 12, 12, 13, 13, 13, 14, 14, 15, 15, 16, 16,
+   17, 17, 18, 18, 19, 19, 20, 20, 21, 21, 22, 22, 23, 24, 24, 25,
+   25, 26, 27, 27, 28, 29, 29, 30, 31, 32, 32, 33, 34, 35, 35, 36,
+   37, 38, 39, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 50,
+   51, 52, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 66, 67, 68,
+   69, 70, 72, 73, 74, 75, 77, 78, 79, 81, 82, 83, 85, 86, 87, 89,
+   90, 92, 93, 95, 96, 98, 99,101,102,104,105,107,109,110,112,114,
+  115,117,119,120,122,124,126,127,129,131,133,135,137,138,140,142,
+  144,146,148,150,152,154,156,158,160,162,164,167,169,171,173,175,
+  177,180,182,184,186,189,191,193,196,198,200,203,205,208,210,213,
+  215,218,220,223,225,228,231,233,236,239,241,244,247,249,252,255 };
+
 // Get a 32-bit representation of R/G/B colors.
 uint32_t get_rgb_color( uint8_t r, uint8_t g, uint8_t b ) {
   return ( g << 16 | r << 8 | b );
@@ -136,12 +154,12 @@ void set_fire_effect(void) {
 	/*
 	 * Flame gradient key
 	 * {0, 0, 0},		black
-	 * {8, 1, 0},		faint orange
-	 * {36, 2, 0},		faint red orange
+	 * {16, 1, 0},		faint orange
+	 * {66, 2, 0},		faint red orange
 	 * {107, 8, 0},		red orange
-	 * {92, 12, 0},		dark orange
-	 * {80, 16, 0},		orange
-	 * {64, 16, 0},		light orange
+	 * {192, 10, 0},	dark orange
+	 * {180, 12, 0},	orange
+	 * {116, 12, 0},	light orange
 	 * {255, 32, 0},	bright light orange
 	 *
 	 * gradient table organize in a "fire" pattern
@@ -150,39 +168,121 @@ void set_fire_effect(void) {
 	 * potential colors
 	 * {191, 32, 0},	yellow orange
 	 */
-	uint8_t fire_colors[11][3] = {
+	uint8_t fire_colors[14][3] = {
+//		 {0, 0, 0},
+//		 {0, 0, 0},
+//		 {0, 0, 0},
+//		 {16, 1, 0},
+//		 {66, 2, 0},
+//		 {107, 8, 0},
+//		 {192, 10, 0},
+//		 {180, 12, 0},
+//		 {116, 12, 0},
+//		 {116, 12, 0},
+//		 {255, 32, 0},
+
 			 {0, 0, 0},
 			 {0, 0, 0},
 			 {0, 0, 0},
-			 {0, 0, 0},
-			 {8, 1, 0},
-			 {36, 2, 0},
-			 {107, 8, 0},
-			 {92, 12, 0},
-			 {80, 16, 0},
-			 {64, 16, 0},
-			 {255, 32, 0},
+			 {255,102,0},
+			 {255,111,9},
+			 {255,121,19},
+			 {255,130,28},
+			 {255,139,37},
+			 {255,148,46},
+			 {255,139,37},
+			 {255,130,28},
+			 {255,121,19},
+			 {255,111,9},
+			 {255,102,0},
+
+//			 {0, 0, 0},
+//			 {0, 0, 0},
+//			 {0, 0, 0},
+//			 {255,102,0},
+//			 {255,111,9},
+//			 {255,121,19},
+//			 {255,130,28},
+//			 {255,139,37},
+//			 {255,148,46},
+//			 {255,158,56},
+//			 {255,167,65},
 	};
+
+	// bi colors
+//	 {0, 0, 100},
+//	 {0, 0, 100},
+//	 {0, 0, 100},
+//	 {16, 1, 100},
+//	 {66, 2, 100},
+//	 {107, 8, 100},
+//	 {192, 10, 100},
+//	 {180, 12, 100},
+//	 {116, 12, 100},
+//	 {116, 12, 100},
+//	 {255, 32, 100},
+
+	// funky colors
+//	 {204, 255, 0},
+//	 {209,240,26},
+//	 {214,224,51},
+//	 {219,209,77},
+//	 {66, 2, 0},
+//	 {107, 8, 0},
+//	 {192, 10, 0},
+//	 {180, 12, 0},
+//	 {116, 12, 0},
+//	 {116, 12, 0},
+//	 {255, 32, 0},
+
+	// fire colors
+//	 {0, 0, 0},
+//	 {0, 0, 0},
+//	 {0, 0, 0},
+//	 {16, 1, 0},
+//	 {66, 2, 0},
+//	 {107, 8, 0},
+//	 {192, 10, 0},
+//	 {180, 12, 0},
+//	 {116, 12, 0},
+//	 {116, 12, 0},
+//	 {255, 32, 0},
+
+	// l colors
+//	 {204, 255, 0},
+//	 {209,240,26},
+//	 {214,224,51},
+//	 {219,209,77},
+//	 {224,194,102},
+//	 {230,179,128},
+//	 {235,163,153},
+//	 {240,148,179},
+//	 {245,133,204},
+//	 {250,117,230},
+//	 {255,102,255},
 
 	/*
 	 * Use a 2D array to model a fire being ignited
 	 * This code ignites the flame from the bottom row. The bottom array needs to be initialized from init_fire_effect().
-	 * The r_val variable is needed for a fire flickering effect.
-	 * Adjust r_val_height to control the height of the fire
+	 * The r_val_spread variable is needed for a fire flickering effect.
+	 * An r_val_spread factor value of 1 means no spread. Higher values increased the spread.
+	 * Adjust r_val_height to control the height of the embers in the fire. Lower this value to decrease the height
 	 */
-	int r_val_height = 0;
+	int r_val_spread = 0;
+	int r_val_spread_factor = 3; // 3
+	int r_val_height = 3; // 3
     for (int x = 0; x < grid_x; x++) {
         for (int y = 1; y < grid_y; y++) {
-        	r_val_height = (rand() % 10 );
+        	r_val_spread = (rand() % r_val_spread_factor );
             int prev = y * grid_x + x;
             int curr = prev - grid_x;
-            frame_buf[curr] = abs(frame_buf[prev] - 1 - (r_val_height & ((rand() % 4) )));
+            frame_buf[curr] = abs(frame_buf[prev] - 1 - (r_val_spread & ((rand() % r_val_height) )));
         }
     }
 
     // input the 2d fire model into the LEDs
     for (int i=0; i<NUM_LEDS; i++) {
-    	set_color(i, get_rgb_color(fire_colors[frame_buf[i]][0], fire_colors[frame_buf[i]][1], fire_colors[frame_buf[i]][2]));
+    	set_color(i, get_rgb_color(gamma[fire_colors[frame_buf[i]][0]], gamma[fire_colors[frame_buf[i]][1]], gamma[fire_colors[frame_buf[i]][2]]));
     }
 
 //	size_t i = 0;

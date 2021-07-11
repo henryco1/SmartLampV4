@@ -14,15 +14,15 @@
 #include <time.h>
 
 // Array of LED colors. G/R/B/G/R/B/...
-#define NUM_LEDS  ( 36 )
+#define NUM_LEDS  ( 52 )
 #define LED_BYTES ( ( NUM_LEDS * 3 * 8 ) + 64 )
 // Max brightness (out of a possible 255)
 #define MAX_B ( 63 )
 // How quickly to increment/decrement the colors.
 #define B_INC ( 1 )
 
-#define grid_x 6
-#define grid_y 6
+#define grid_x 4
+#define grid_y 13
 
 uint8_t COLORS[ LED_BYTES ];
 unsigned int frame_buf[grid_x*grid_y];
