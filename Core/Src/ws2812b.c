@@ -182,19 +182,6 @@ void set_fire_effect(void) {
 			 {255,102,0},
 	};
 
-	// bi colors
-//	 {0, 0, 100},
-//	 {0, 0, 100},
-//	 {0, 0, 100},
-//	 {16, 1, 100},
-//	 {66, 2, 100},
-//	 {107, 8, 100},
-//	 {192, 10, 100},
-//	 {180, 12, 100},
-//	 {116, 12, 100},
-//	 {116, 12, 100},
-//	 {255, 32, 100},
-
 	// funky colors
 //	 {204, 255, 0},
 //	 {209,240,26},
@@ -243,6 +230,171 @@ void set_fire_effect(void) {
 	 */
 	int r_val_spread = 0;
 	int r_val_spread_factor = 4; // 3
+	int r_val_height = 3; // 3
+    for (int x = 0; x < grid_x; x++) {
+        for (int y = 1; y < grid_y; y++) {
+        	r_val_spread = (rand() % r_val_spread_factor );
+            int prev = y * grid_x + x;
+            int curr = prev - grid_x;
+            frame_buf[curr] = abs(frame_buf[prev] - 1 - (r_val_spread & ((rand() % r_val_height) )));
+        }
+    }
+
+    // input the 2d fire model into the LEDs
+    for (int i=0; i<NUM_LEDS; i++) {
+    	set_color(i, get_rgb_color(gamma_table[fire_colors[frame_buf[i]][0]], gamma_table[fire_colors[frame_buf[i]][1]], gamma_table[fire_colors[frame_buf[i]][2]]));
+    }
+	delay_cycles( 500000 );
+}
+
+void set_bi_effect(void) {
+	/*
+	 * Flame gradient key
+	 * {0, 0, 0},		black
+	 * {255,102,0}		dark orange
+	 * {255,148,46}		orange
+	 *
+	 * all non black colors in the table are between dark orange and
+	 * orange
+	 *
+	 * gradient table organize in a "fire" pattern
+	 * note that my LEDs might be damaged so the color table might be off
+	 *
+	 * https://meyerweb.com/eric/tools/color-blend/#FFCC66:FF6600:10:rgbd
+	 */
+	uint8_t fire_colors[11][3] = {
+		 {0, 0, 100},
+		 {26, 2, 100},
+		 {46, 2, 100},
+		 {66, 4, 100},
+		 {107, 8, 100},
+		 {152, 9, 100},
+		 {192, 10, 100},
+		 {180, 12, 100},
+		 {116, 12, 100},
+		 {116, 12, 100},
+		 {255, 32, 100},
+	};
+
+	/*
+	 * Use a 2D array to model a fire being ignited
+	 * This code ignites the flame from the bottom row. The bottom array needs to be initialized from init_fire_effect().
+	 * The r_val_spread variable is needed for a fire flickering effect.
+	 * An r_val_spread factor value of 1 means no spread. Higher values increased the spread.
+	 * Adjust r_val_height to control the height of the embers in the fire. Lower this value to decrease the height
+	 */
+	int r_val_spread = 0;
+	int r_val_spread_factor = 2; // 3
+	int r_val_height = 8; // 3
+    for (int x = 0; x < grid_x; x++) {
+        for (int y = 1; y < grid_y; y++) {
+        	r_val_spread = (rand() % r_val_spread_factor );
+            int prev = y * grid_x + x;
+            int curr = prev - grid_x;
+            frame_buf[curr] = abs(frame_buf[prev] - 1 - (r_val_spread & ((rand() % r_val_height) )));
+        }
+    }
+
+    // input the 2d fire model into the LEDs
+    for (int i=0; i<NUM_LEDS; i++) {
+    	set_color(i, get_rgb_color(gamma_table[fire_colors[frame_buf[i]][0]], gamma_table[fire_colors[frame_buf[i]][1]], gamma_table[fire_colors[frame_buf[i]][2]]));
+    }
+	delay_cycles( 500000 );
+}
+
+void set_funky_effect(void) {
+	/*
+	 * Flame gradient key
+	 * {0, 0, 0},		black
+	 * {255,102,0}		dark orange
+	 * {255,148,46}		orange
+	 *
+	 * all non black colors in the table are between dark orange and
+	 * orange
+	 *
+	 * gradient table organize in a "fire" pattern
+	 * note that my LEDs might be damaged so the color table might be off
+	 *
+	 * https://meyerweb.com/eric/tools/color-blend/#66FF00:CC0000:10:rgbd
+	 */
+	uint8_t fire_colors[11][3] = {
+		 {111,232,0},
+		 {121,209,0},
+		 {130,185,0},
+		 {139,162,0},
+		 {148,139,0},
+		 {158,116,0},
+		 {167,93,0},
+		 {176,70,0},
+		 {116, 12, 0},
+		 {195,23,0},
+		 {204,0,0},
+	};
+
+	/*
+	 * Use a 2D array to model a fire being ignited
+	 * This code ignites the flame from the bottom row. The bottom array needs to be initialized from init_fire_effect().
+	 * The r_val_spread variable is needed for a fire flickering effect.
+	 * An r_val_spread factor value of 1 means no spread. Higher values increased the spread.
+	 * Adjust r_val_height to control the height of the embers in the fire. Lower this value to decrease the height
+	 */
+	int r_val_spread = 0;
+	int r_val_spread_factor = 3; // 3
+	int r_val_height = 3; // 3
+    for (int x = 0; x < grid_x; x++) {
+        for (int y = 1; y < grid_y; y++) {
+        	r_val_spread = (rand() % r_val_spread_factor );
+            int prev = y * grid_x + x;
+            int curr = prev - grid_x;
+            frame_buf[curr] = abs(frame_buf[prev] - 1 - (r_val_spread & ((rand() % r_val_height) )));
+        }
+    }
+
+    // input the 2d fire model into the LEDs
+    for (int i=0; i<NUM_LEDS; i++) {
+    	set_color(i, get_rgb_color(gamma_table[fire_colors[frame_buf[i]][0]], gamma_table[fire_colors[frame_buf[i]][1]], gamma_table[fire_colors[frame_buf[i]][2]]));
+    }
+	delay_cycles( 500000 );
+}
+
+void set_L_effect(void) {
+	/*
+	 * Flame gradient key
+	 * {0, 0, 0},		black
+	 * {255,102,0}		dark orange
+	 * {255,148,46}		orange
+	 *
+	 * all non black colors in the table are between dark orange and
+	 * orange
+	 *
+	 * gradient table organize in a "fire" pattern
+	 * note that my LEDs might be damaged so the color table might be off
+	 *
+	 * https://meyerweb.com/eric/tools/color-blend/#FFCC66:FF6600:10:rgbd
+	 */
+	uint8_t fire_colors[11][3] = {
+		{204, 255, 0},
+		{209,240,26},
+		{214,224,51},
+		{219,209,77},
+		{224,194,102},
+		{230,179,128},
+		{235,163,153},
+		{240,148,179},
+		{245,133,204},
+		{250,117,230},
+		{255,102,255},
+	};
+
+	/*
+	 * Use a 2D array to model a fire being ignited
+	 * This code ignites the flame from the bottom row. The bottom array needs to be initialized from init_fire_effect().
+	 * The r_val_spread variable is needed for a fire flickering effect.
+	 * An r_val_spread factor value of 1 means no spread. Higher values increased the spread.
+	 * Adjust r_val_height to control the height of the embers in the fire. Lower this value to decrease the height
+	 */
+	int r_val_spread = 0;
+	int r_val_spread_factor = 3; // 3
 	int r_val_height = 3; // 3
     for (int x = 0; x < grid_x; x++) {
         for (int y = 1; y < grid_y; y++) {

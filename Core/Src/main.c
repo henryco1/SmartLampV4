@@ -116,12 +116,12 @@ int main(void)
    * Button pins
    * - Power button uses PA0
    * - Mode switch left uses PA1
-   * - Mode switch right uses PA2
+   * - Mode switch right uses PA3
    */
-  GPIOA->MODER    &= ~( (0x3 << GPIO_PIN_0 ) | (0x3 << GPIO_PIN_1 ) | (0x3 << GPIO_PIN_2 ) );
-  GPIOA->PUPDR    &= ~( (0x0 << GPIO_PIN_0 ) | (0x0 << GPIO_PIN_1 ) | (0x0 << GPIO_PIN_2 ) );
-  GPIOA->MODER    |=  ( (0x0 << GPIO_PIN_0 ) | (0x0 << GPIO_PIN_1 ) | (0x0 << GPIO_PIN_2 ) );
-  GPIOA->PUPDR    |=  ( (0x1 << GPIO_PIN_0 ) | (0x1 << GPIO_PIN_1 ) | (0x1 << GPIO_PIN_2 ) );
+  GPIOA->MODER    &= ~( (0x3 << 0 * 2 ) | (0x3 << 1 * 2 ) | (0x3 << 3 * 2 ) );
+  GPIOA->PUPDR    &= ~( (0x0 << 0 * 2 ) | (0x0 << 1 * 2 ) | (0x0 << 3 * 2 ) );
+  GPIOA->MODER    |=  ( (0x0 << 0 * 2 ) | (0x0 << 1 * 2 ) | (0x0 << 3 * 2 ) );
+  GPIOA->PUPDR    |=  ( (0x1 << 0 * 2 ) | (0x1 << 1 * 2 ) | (0x1 << 3 * 2 ) );
 
   /*
    * DMA config (ch1)
@@ -176,16 +176,86 @@ int main(void)
 
   reset_leds();
   init_fire_effect();
+  unsigned int on_state = 1;
+  unsigned int mode = 1;
+  unsigned int mode_upper_bound = 4;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
+	/* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
-		set_fire_effect();
+	/* USER CODE BEGIN 3 */
+
+	// power switching logic
+//	if ( !(GPIOA->IDR & ( 1 << 3)) )
+//	{
+//		if (on_state == 1)
+//		{
+//			on_state = 0;
+//			reset_leds();
+//			delay_cycles( 2000000 );
+//		}
+//		else
+//		{
+//			on_state = 1;
+//			init_fire_effect();
+//		}
+//	}
+//
+
+
+	if (on_state == 1)
+	{
+		// mode switching logic
+		if ( !(GPIOA->IDR & ( 1 << 1 )) )
+		{
+			mode -= 1;
+			if (mode <= 0)
+			{
+				mode = mode_upper_bound;
+			}
+			delay_cycles( 1000000 );
+			reset_leds();
+			init_fire_effect();
+		}
+		else if ( !(GPIOA->IDR & ( 1 << 0 )) )
+		{
+			mode += 1;
+			if (mode > mode_upper_bound)
+			{
+				mode = 1;
+			}
+			delay_cycles( 1000000 );
+			reset_leds();
+			init_fire_effect();
+		}
+
+		// LED animation logic
+		if (mode == 1)
+		{
+			set_fire_effect();
+		}
+		else if (mode == 2)
+		{
+			set_bi_effect();
+		}
+		else if (mode == 3)
+		{
+			set_funky_effect();
+		}
+		else if (mode == 4)
+		{
+			set_L_effect();
+		}
+	}
+
+
+
+
+
   }
   /* USER CODE END 3 */
 }

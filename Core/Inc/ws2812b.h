@@ -35,5 +35,10 @@ uint8_t get_led_b( size_t led_num );
 void rainbow( void );
 void reset_leds( void );
 void set_fire_effect(void);
+void set_bi_effect(void);
+void set_funky_effect(void);
 void init_fire_effect(void);
+void set_L_effect(void);
+void delay_cycles(uint32_t);
+
 #endif /* INC_WS2812B_H_ */
