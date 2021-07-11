@@ -119,22 +119,6 @@ int main(void)
   GPIOA->MODER    |=  ( (0x0 << GPIO_PIN_0 ) | (0x0 << GPIO_PIN_1 ) | (0x0 << GPIO_PIN_2 ) );		// set to alt func mode
   GPIOA->PUPDR    |=  ( (0x1 << GPIO_PIN_0 ) | (0x1 << GPIO_PIN_1 ) | (0x1 << GPIO_PIN_2 ) );		// set gpio as input
 
-//
-//  GPIOA->MODER    |=  ( 0x0 << ( 0 * 2 ) );		// set to alt func mode
-//  GPIOA->PUPDR    &= ~( 0x0 << ( 0 * 2 ) );		// clear
-//  GPIOA->PUPDR    |=  ( 0x1 << ( 0 * 2 ) );		// set gpio as input
-//  // Mode switch left uses PA1
-//  GPIOA->MODER    &= ~( 0x3 << ( 1 * 2 ) );		// clear / set to reset
-//  GPIOA->MODER    |=  ( 0x0 << ( 1 * 2 ) );		// set to alt func mode
-//  GPIOA->PUPDR    &= ~( 0x0 << ( 1 * 2 ) );		// clear
-//  GPIOA->PUPDR    |=  ( 0x1 << ( 1 * 2 ) );		// set gpio as input
-//  // Mode switch right uses PA2
-//  GPIOA->MODER    &= ~( 0x3 << ( 2 * 2 ) );		// clear / set to reset
-//  GPIOA->MODER    |=  ( 0x0 << ( 2 * 2 ) );		// set to alt func mode
-//  GPIOA->PUPDR    &= ~( 0x0 << ( 2 * 2 ) );		// clear
-//  GPIOA->PUPDR    |=  ( 0x1 << ( 2 * 2 ) );		// set gpio as input
-
-
   /*
    * DMA config (ch1)
    * - Memory to peripheral
@@ -154,20 +138,23 @@ int main(void)
 						   DMA_CCR_CIRC |
 						   DMA_CCR_DIR );
 
-  // Set DMA source and destination addresses.
   // Source: Address of the framebuffer.
   DMA1_Channel3->CMAR  = ( uint32_t )&COLORS;
   // Destination: SPI1 data register.
   DMA1_Channel3->CPAR  = ( uint32_t )&( SPI1->DR );
   // Set DMA data transfer length (framebuffer length).
   DMA1_Channel3->CNDTR = ( uint16_t )LED_BYTES;
-  // SPI1 configuration:
-  // - Clock phase/polarity: 1/1
-  // - Assert internal CS signal (software CS pin control)
-  // - MSB-first
-  // - 8-bit frames
-  // - Baud rate prescaler of 8 (for a 6MHz bit-clock)
-  // - TX DMA requests enabled.
+
+  /*
+   * SPI1 configuration:
+   * - Clock phase = 1
+   * - Clock polarity = 1
+   * - Enable software peripheral control
+   * - MSB first
+   * - 8-bit frames
+   * - Baud rate prescaler of 8
+   * - TX DMA requests enabled.
+   */
   SPI1->CR1 &= ~( SPI_CR1_LSBFIRST |
 				  SPI_CR1_BR );
   SPI1->CR1 |=  ( SPI_CR1_SSM |
@@ -179,14 +166,11 @@ int main(void)
   SPI1->CR2 &= ~( SPI_CR2_DS );
   SPI1->CR2 |=  ( 0x7 << SPI_CR2_DS_Pos |
 				  SPI_CR2_TXDMAEN );
-  // Enable the SPI peripheral.
-  SPI1->CR1 |=  ( SPI_CR1_SPE );
-  // Enable DMA1 Channel 1 to start sending colors.
-  DMA1_Channel3->CCR |= ( DMA_CCR_EN );
-  // Done; now just cycle between colors.
-  reset_leds();
 
-  srand(time(NULL));
+  SPI1->CR1 |=  ( SPI_CR1_SPE );
+  DMA1_Channel3->CCR |= ( DMA_CCR_EN );
+
+  reset_leds();
   init_fire_effect();
   /* USER CODE END 2 */
 
