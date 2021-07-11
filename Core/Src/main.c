@@ -98,11 +98,16 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
-  // LED pin: the LED strip uses PA7, PA7 is AF#0 (SPI1 SDO / MISO).
-  GPIOA->MODER    &= ~( 0x3 << ( 7 * 2 ) );		// clear / set to reset
-  GPIOA->MODER    |=  ( 0x2 << ( 7 * 2 ) );		// set to alt func mode
-  GPIOA->AFR[0] &= ~( 0x00 << (7 * 2) );		// clear
-  GPIOA->AFR[0] |= ( 0x5 << (7 * 4) );		// set AF5 for PA7 is SPI1_MOSI (GPIO_AFRL_AFSEL5)
+  /*
+   * The LED strip uses PA7, PA7 is AF#0 (SPI1 SDO / MISO).
+   * - set to alt func mode
+   * - set AF5 for PA7 is SPI1_MOSI (GPIO_AFRL_AFSEL5)
+   */
+  GPIOA->MODER    &= ~( 0x3 << ( 7 * 2 ) );
+  GPIOA->MODER    |=  ( 0x2 << ( 7 * 2 ) );
+  GPIOA->AFR[0] &= ~( 0x00 << (7 * 2) );
+  GPIOA->AFR[0] |= ( 0x5 << (7 * 4) );
+
   /*
    * GPIO config
    * - set as input
@@ -113,11 +118,10 @@ int main(void)
    * - Mode switch left uses PA1
    * - Mode switch right uses PA2
    */
-
   GPIOA->MODER    &= ~( (0x3 << GPIO_PIN_0 ) | (0x3 << GPIO_PIN_1 ) | (0x3 << GPIO_PIN_2 ) );
   GPIOA->PUPDR    &= ~( (0x0 << GPIO_PIN_0 ) | (0x0 << GPIO_PIN_1 ) | (0x0 << GPIO_PIN_2 ) );
-  GPIOA->MODER    |=  ( (0x0 << GPIO_PIN_0 ) | (0x0 << GPIO_PIN_1 ) | (0x0 << GPIO_PIN_2 ) );		// set to alt func mode
-  GPIOA->PUPDR    |=  ( (0x1 << GPIO_PIN_0 ) | (0x1 << GPIO_PIN_1 ) | (0x1 << GPIO_PIN_2 ) );		// set gpio as input
+  GPIOA->MODER    |=  ( (0x0 << GPIO_PIN_0 ) | (0x0 << GPIO_PIN_1 ) | (0x0 << GPIO_PIN_2 ) );
+  GPIOA->PUPDR    |=  ( (0x1 << GPIO_PIN_0 ) | (0x1 << GPIO_PIN_1 ) | (0x1 << GPIO_PIN_2 ) );
 
   /*
    * DMA config (ch1)
