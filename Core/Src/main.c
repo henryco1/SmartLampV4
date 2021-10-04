@@ -20,7 +20,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "ws2812b.h"
@@ -28,11 +27,16 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+//#if defined (TEST_ENABLED)
+//#include "../Tests/ws2812b_tests.h"
+//#define TEST 1
+//#else
+//#define TEST 0
+//#endif
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -103,8 +107,8 @@ int main(void)
    * - set to alt func mode
    * - set AF5 for PA7 is SPI1_MOSI (GPIO_AFRL_AFSEL5)
    */
-  GPIOA->MODER    &= ~( 0x3 << ( 7 * 2 ) );
-  GPIOA->MODER    |=  ( 0x2 << ( 7 * 2 ) );
+  GPIOA->MODER  &= ~( 0x3 << ( 7 * 2 ) );
+  GPIOA->MODER  |= ( 0x2 << ( 7 * 2 ) );
   GPIOA->AFR[0] &= ~( 0x00 << (7 * 2) );
   GPIOA->AFR[0] |= ( 0x5 << (7 * 4) );
 
@@ -118,10 +122,10 @@ int main(void)
    * - Mode switch left uses PA1
    * - Mode switch right uses PA3
    */
-  GPIOA->MODER    &= ~( (0x3 << 0 * 2 ) | (0x3 << 1 * 2 ) | (0x3 << 3 * 2 ) );
-  GPIOA->PUPDR    &= ~( (0x0 << 0 * 2 ) | (0x0 << 1 * 2 ) | (0x0 << 3 * 2 ) );
-  GPIOA->MODER    |=  ( (0x0 << 0 * 2 ) | (0x0 << 1 * 2 ) | (0x0 << 3 * 2 ) );
-  GPIOA->PUPDR    |=  ( (0x1 << 0 * 2 ) | (0x1 << 1 * 2 ) | (0x1 << 3 * 2 ) );
+  GPIOA->MODER	&= ~( (0x3 << 0 * 2 ) | (0x3 << 1 * 2 ) | (0x3 << 3 * 2 ) );
+  GPIOA->PUPDR  &= ~( (0x0 << 0 * 2 ) | (0x0 << 1 * 2 ) | (0x0 << 3 * 2 ) );
+  GPIOA->MODER  |=  ( (0x0 << 0 * 2 ) | (0x0 << 1 * 2 ) | (0x0 << 3 * 2 ) );
+  GPIOA->PUPDR  |=  ( (0x1 << 0 * 2 ) | (0x1 << 1 * 2 ) | (0x1 << 3 * 2 ) );
 
   /*
    * DMA config (ch1)
@@ -174,7 +178,6 @@ int main(void)
   SPI1->CR1 |=  ( SPI_CR1_SPE );
   DMA1_Channel3->CCR |= ( DMA_CCR_EN );
 
-  reset_leds();
   init_fire_effect();
   unsigned int on_state = 1;
   unsigned int mode = 1;
@@ -183,6 +186,14 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  // test build config program loop
+//  if (TEST == 1)
+//  {
+//	  test_main();
+//	  return;
+//  }
+
   while (1)
   {
 	/* USER CODE END WHILE */
@@ -218,7 +229,6 @@ int main(void)
 				mode = mode_upper_bound;
 			}
 			delay_cycles( 1000000 );
-			reset_leds();
 			init_fire_effect();
 		}
 		else if ( !(GPIOA->IDR & ( 1 << 0 )) )
@@ -229,7 +239,6 @@ int main(void)
 				mode = 1;
 			}
 			delay_cycles( 1000000 );
-			reset_leds();
 			init_fire_effect();
 		}
 

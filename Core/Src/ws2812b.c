@@ -124,6 +124,7 @@ void reset_leds( void ) {
 }
 
 void set_red( void ) {
+	reset_leds();
 	for ( size_t i = 0; i < NUM_LEDS; i++) {
 		set_color (i, get_rgb_color( 0x0C, 0x00, 0x00 ) );
 	}
@@ -139,6 +140,7 @@ void init_frame_buffer(void) {
  * By default, the fire color array is sorted from darkest to lightest in ascending order.
  */
 void init_fire_effect(void) {
+	reset_leds();
     for (int i=0; i<grid_x; i++) {
         frame_buf[(grid_y-1) * grid_x + i] = 10;
     }

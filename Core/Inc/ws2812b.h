@@ -2,7 +2,7 @@
  * ws2812b.h
  *
  *  Created on: May 25, 2021
- *      Author: Lommb
+ *      Author: henryco1
  */
 
 #ifndef INC_WS2812B_H_
