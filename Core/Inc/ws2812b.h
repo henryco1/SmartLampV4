@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <math.h>
 
 // Array of LED colors. G/R/B/G/R/B/...
 #define NUM_LEDS  ( 52 )

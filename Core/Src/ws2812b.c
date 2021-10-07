@@ -135,6 +135,59 @@ void init_frame_buffer(void) {
 }
 
 /*
+ *
+ */
+void init_rain_effect(void) {
+	reset_leds();
+}
+
+void set_rain_effect(void) {
+	/*
+	 *
+	 */
+	uint8_t fire_colors[11][3] = {
+			 {0,102,0},
+			 {0,111,9},
+			 {0,121,19},
+			 {0,130,28},
+			 {0,139,37},
+			 {0,148,46},
+			 {0,139,37},
+			 {0,130,28},
+			 {0,121,19},
+			 {0,111,9},
+			 {0,102,0},
+	};
+	for (int row = 0; row < grid_y; row++) {
+		for (int col = 0; col < grid_x; col) {
+
+		}
+	}
+//	int r_val_spread = 0;
+//	int r_val_spread_factor = 4; // 3
+//	int r_val_height = 3; // 3
+//    for (int x = 0; x < grid_x; x++) {
+//        for (int y = 0; y < grid_y; y++) {
+//			int p = sqrt(pow(x,2) + pow(y,2));
+//			int z = y;
+//			frame_buf[p] = abs(frame_buf[prev]);
+////        	r_val_spread = (rand() % r_val_spread_factor );
+////            int prev = y * grid_x + x;
+////            int curr = prev - grid_x;
+////            frame_buf[curr] = abs(frame_buf[prev] - 1 - (r_val_spread & ((rand() % r_val_height) )));
+//        }
+//    }
+//
+    // input the 2d fire model into the LEDs
+    for (int i=0; i<NUM_LEDS; i++) {
+    	set_color(i, get_rgb_color(gamma_table[fire_colors[frame_buf[i]][0]], gamma_table[fire_colors[frame_buf[i]][1]], gamma_table[fire_colors[frame_buf[i]][2]]));
+    	delay_cycles( 1000000 );
+    }
+
+//    reset_leds();
+}
+
+/*
  * Initializes the frame buf so that the fire can start or be "ignited" from the bottom row of the grid
  * The initial value of the bottom row should be brightest element from the fire color array.
  * By default, the fire color array is sorted from darkest to lightest in ascending order.

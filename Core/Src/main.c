@@ -103,7 +103,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   /*
-   * The LED strip uses PA7, PA7 is AF#0 (SPI1 SDO / MISO).
+   * The LED strip uses PA7, PA7 is AF#0 (SPI1 SDO / MOSI).
    * - set to alt func mode
    * - set AF5 for PA7 is SPI1_MOSI (GPIO_AFRL_AFSEL5)
    */
@@ -259,6 +259,7 @@ int main(void)
 		{
 			set_L_effect();
 		}
+
 	}
 
 

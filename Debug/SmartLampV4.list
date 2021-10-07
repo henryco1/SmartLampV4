@@ -7,43 +7,43 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   1 .text         000038ec  0800018c  0800018c  0001018c  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       00000240  08003a78  08003a78  00013a78  2**2
+  2 .rodata       00000264  08003a78  08003a78  00013a78  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .ARM.extab    00000000  08003cb8  08003cb8  00020070  2**0
+  3 .ARM.extab    00000000  08003cdc  08003cdc  00020070  2**0
                   CONTENTS
-  4 .ARM          00000008  08003cb8  08003cb8  00013cb8  2**2
+  4 .ARM          00000008  08003cdc  08003cdc  00013cdc  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  5 .preinit_array 00000000  08003cc0  08003cc0  00020070  2**0
+  5 .preinit_array 00000000  08003ce4  08003ce4  00020070  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .init_array   00000004  08003cc0  08003cc0  00013cc0  2**2
+  6 .init_array   00000004  08003ce4  08003ce4  00013ce4  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  7 .fini_array   00000004  08003cc4  08003cc4  00013cc4  2**2
+  7 .fini_array   00000004  08003ce8  08003ce8  00013ce8  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  8 .data         00000070  20000000  08003cc8  00020000  2**2
+  8 .data         00000070  20000000  08003cec  00020000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          0000074c  20000070  08003d38  00020070  2**2
+  9 .bss          0000074c  20000070  08003d5c  00020070  2**2
                   ALLOC
- 10 ._user_heap_stack 00000604  200007bc  08003d38  000207bc  2**0
+ 10 ._user_heap_stack 00000604  200007bc  08003d5c  000207bc  2**0
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  00020070  2**0
                   CONTENTS, READONLY
- 12 .debug_info   0000e130  00000000  00000000  000200a0  2**0
+ 12 .debug_info   0000e282  00000000  00000000  000200a0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_abbrev 00001e99  00000000  00000000  0002e1d0  2**0
+ 13 .debug_abbrev 00001f09  00000000  00000000  0002e322  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_aranges 00000b78  00000000  00000000  00030070  2**3
+ 14 .debug_aranges 00000b88  00000000  00000000  00030230  2**3
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_ranges 00000a80  00000000  00000000  00030be8  2**3
+ 15 .debug_ranges 00000a90  00000000  00000000  00030db8  2**3
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_line   000061d0  00000000  00000000  00031668  2**0
+ 16 .debug_line   0000621e  00000000  00000000  00031848  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_str    00003c53  00000000  00000000  00037838  2**0
+ 17 .debug_str    00003cd5  00000000  00000000  00037a66  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .comment      0000007b  00000000  00000000  0003b48b  2**0
+ 18 .comment      0000007b  00000000  00000000  0003b73b  2**0
                   CONTENTS, READONLY
- 19 .debug_frame  00003110  00000000  00000000  0003b508  2**2
+ 19 .debug_frame  00003158  00000000  00000000  0003b7b8  2**2
                   CONTENTS, READONLY, DEBUGGING
- 20 .stabstr      0000004e  00000000  00000000  0003e618  2**0
+ 20 .stabstr      0000004e  00000000  00000000  0003e910  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -2164,9 +2164,9 @@ void set_fire_effect(void) {
  8000ec6:	46bd      	mov	sp, r7
  8000ec8:	bdb0      	pop	{r4, r5, r7, pc}
  8000eca:	bf00      	nop
- 8000ecc:	08003a78 	.word	0x08003a78
+ 8000ecc:	08003a9c 	.word	0x08003a9c
  8000ed0:	20000098 	.word	0x20000098
- 8000ed4:	08003b58 	.word	0x08003b58
+ 8000ed4:	08003b7c 	.word	0x08003b7c
  8000ed8:	0007a120 	.word	0x0007a120
 
 08000edc <set_bi_effect>:
@@ -2339,9 +2339,9 @@ void set_bi_effect(void) {
  8001006:	46bd      	mov	sp, r7
  8001008:	bdb0      	pop	{r4, r5, r7, pc}
  800100a:	bf00      	nop
- 800100c:	08003aa4 	.word	0x08003aa4
+ 800100c:	08003ac8 	.word	0x08003ac8
  8001010:	20000098 	.word	0x20000098
- 8001014:	08003b58 	.word	0x08003b58
+ 8001014:	08003b7c 	.word	0x08003b7c
  8001018:	0007a120 	.word	0x0007a120
 
 0800101c <set_funky_effect>:
@@ -2514,9 +2514,9 @@ void set_funky_effect(void) {
  8001146:	46bd      	mov	sp, r7
  8001148:	bdb0      	pop	{r4, r5, r7, pc}
  800114a:	bf00      	nop
- 800114c:	08003ac8 	.word	0x08003ac8
+ 800114c:	08003aec 	.word	0x08003aec
  8001150:	20000098 	.word	0x20000098
- 8001154:	08003b58 	.word	0x08003b58
+ 8001154:	08003b7c 	.word	0x08003b7c
  8001158:	0007a120 	.word	0x0007a120
 
 0800115c <set_L_effect>:
@@ -2689,9 +2689,9 @@ void set_L_effect(void) {
  8001286:	46bd      	mov	sp, r7
  8001288:	bdb0      	pop	{r4, r5, r7, pc}
  800128a:	bf00      	nop
- 800128c:	08003aec 	.word	0x08003aec
+ 800128c:	08003b10 	.word	0x08003b10
  8001290:	20000098 	.word	0x20000098
- 8001294:	08003b58 	.word	0x08003b58
+ 8001294:	08003b7c 	.word	0x08003b7c
  8001298:	0007a120 	.word	0x0007a120
 
 0800129c <Reset_Handler>:
@@ -2775,7 +2775,7 @@ LoopForever:
   ldr   sp, =_estack    /* Set stack pointer */
  80012d4:	20010000 	.word	0x20010000
 	ldr	r3, =_sidata
- 80012d8:	08003cc8 	.word	0x08003cc8
+ 80012d8:	08003cec 	.word	0x08003cec
 	ldr	r0, =_sdata
  80012dc:	20000000 	.word	0x20000000
 	ldr	r3, =_edata
@@ -4901,7 +4901,7 @@ HAL_StatusTypeDef HAL_RCC_OscConfig(RCC_OscInitTypeDef  *RCC_OscInitStruct)
         while(READ_BIT(RCC->CR, RCC_CR_HSERDY) == 0U)
  8001ef6:	e010      	b.n	8001f1a <HAL_RCC_OscConfig+0x2ba>
  8001ef8:	40021000 	.word	0x40021000
- 8001efc:	08003b10 	.word	0x08003b10
+ 8001efc:	08003b34 	.word	0x08003b34
  8001f00:	20000000 	.word	0x20000000
  8001f04:	20000004 	.word	0x20000004
         {
@@ -6247,7 +6247,7 @@ HAL_StatusTypeDef HAL_RCC_ClockConfig(RCC_ClkInitTypeDef  *RCC_ClkInitStruct, ui
  800264e:	bf00      	nop
  8002650:	40022000 	.word	0x40022000
  8002654:	40021000 	.word	0x40021000
- 8002658:	08003b10 	.word	0x08003b10
+ 8002658:	08003b34 	.word	0x08003b34
  800265c:	20000000 	.word	0x20000000
  8002660:	20000004 	.word	0x20000004
 
@@ -6450,7 +6450,7 @@ uint32_t HAL_RCC_GetSysClockFreq(void)
  8002762:	f85d 7b04 	ldr.w	r7, [sp], #4
  8002766:	4770      	bx	lr
  8002768:	40021000 	.word	0x40021000
- 800276c:	08003b28 	.word	0x08003b28
+ 800276c:	08003b4c 	.word	0x08003b4c
  8002770:	00f42400 	.word	0x00f42400
  8002774:	007a1200 	.word	0x007a1200
 
@@ -6499,7 +6499,7 @@ uint32_t HAL_RCC_GetPCLK1Freq(void)
  80027b0:	4618      	mov	r0, r3
  80027b2:	bd80      	pop	{r7, pc}
  80027b4:	40021000 	.word	0x40021000
- 80027b8:	08003b20 	.word	0x08003b20
+ 80027b8:	08003b44 	.word	0x08003b44
 
 080027bc <HAL_RCC_GetPCLK2Freq>:
   * @note   Each time PCLK2 changes, this function must be called to update the
@@ -6526,7 +6526,7 @@ uint32_t HAL_RCC_GetPCLK2Freq(void)
  80027dc:	4618      	mov	r0, r3
  80027de:	bd80      	pop	{r7, pc}
  80027e0:	40021000 	.word	0x40021000
- 80027e4:	08003b20 	.word	0x08003b20
+ 80027e4:	08003b44 	.word	0x08003b44
 
 080027e8 <RCC_SetFlashLatencyFromMSIRange>:
             voltage range.
@@ -9483,10 +9483,10 @@ HAL_StatusTypeDef UART_WaitOnFlagUntilTimeout(UART_HandleTypeDef *huart, uint32_
  80038ea:	4798      	blx	r3
  80038ec:	3501      	adds	r5, #1
  80038ee:	e7f2      	b.n	80038d6 <__libc_init_array+0x1e>
- 80038f0:	08003cc0 	.word	0x08003cc0
- 80038f4:	08003cc0 	.word	0x08003cc0
- 80038f8:	08003cc0 	.word	0x08003cc0
- 80038fc:	08003cc4 	.word	0x08003cc4
+ 80038f0:	08003ce4 	.word	0x08003ce4
+ 80038f4:	08003ce4 	.word	0x08003ce4
+ 80038f8:	08003ce4 	.word	0x08003ce4
+ 80038fc:	08003ce8 	.word	0x08003ce8
 
 08003900 <memset>:
  8003900:	4402      	add	r2, r0

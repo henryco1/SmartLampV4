@@ -24,7 +24,7 @@ void display_led_test(unsigned int mock_buf[grid_x*grid_y])
 	{
 		for (int j=0; j<grid_y; j++)
 		{
-			printf("%c", mock_buf[i*j] + '0');
+			printf("%d ", mock_buf[i*j] + '0');
 		}
 		printf("\n");
 	}
